@@ -1,0 +1,56 @@
+body {
+    background-color: #3300ff; /* Light background color */
+    font-family: Arial, sans-serif;
+    color:aqua;
+}
+
+#loginForm {
+    background-color: #d443b5; /* White background for the login form */
+    border-radius: 9px rgb(23, 0, 128) ;
+    padding: 12px;
+    box-shadow: 1 4px 10px rgba(90, 83, 222, 0.4);
+    width: 300px;
+    height:300px;
+    margin: 95px auto; /* Center the login form */
+    text-align: center; /* Center align text */
+}
+
+input[type="text"], input[type="password"] {
+    width: 80%;
+    padding: 7px;
+    margin: 10px 0;
+    border: 1px solid #f55c5c;
+    border-radius: 5px;
+    font-size: 16px; /* Increased font size */
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #3300ff; /* Change border color on focus */
+    outline: none; /* Remove outline */
+}
+
+button {
+    background-color: #b3ff00; /* Bootstrap primary color */
+    color: #5cc2f5;
+    padding: 12px;
+    border: indigo;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+h2 {
+    color: #333; /* Dark text color */
+}
+
+h3 {
+    margin-top: 20px; /* Space above h3 */
+}
+
+#bookManagement {
+    text-align: left; /* Left align text in book management */
+}
