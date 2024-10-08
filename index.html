@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Library Management System</title>
+</head>
+<body>
+    <div id="loginForm">
+        <h2>Login</h2>
+        <div id="loginError" style="color: red;"></div>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="bookManagement" style="display: none;">
+        <h2>Library Management System</h2>
+        <div id="userRole"></div>
+        <button onclick="logout()">Logout</button>
+        
+        <br><br> <!-- Space added here -->
+        
+        <button onclick="viewBooks()">Book List</button> <!-- Book List Button -->
+
+        <h3>Add / Update Book</h3>
+        <input type="text" id="bookName" placeholder="Book Name" required>
+        <input type="text" id="bookAuthor" placeholder="Book Author" required>
+        <input type="text" id="bookImage" placeholder="Book Image URL" required>
+        <button onclick="addBook()">Add / Update Book</button>
+
+        <h3>Search Books</h3>
+        <input type="text" id="search" placeholder="Search by name or author" onkeyup="searchBooks()">
+        
+        <h3>Book List</h3>
+        <ul id="bookList"></ul>
+        
+        <div id="adminFeatures" style="display: none;">
+            <h4>Admin Features:</h4>
+            <!-- Additional admin features can be added here -->
+        </div>
+    </div>
+
+    <div id="allBooks" style="display: none;">
+        <h2>All Books</h2>
+        <button onclick="goBack()">Back</button>
+        <div id="bookGallery"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
