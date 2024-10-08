@@ -16,13 +16,16 @@
     </div>
 
     <div id="bookManagement" style="display: none;">
-        <h2>Library Management System</h2>
-        <div id="userRole"></div>
-        <button onclick="logout()">Logout</button>
-        
-        <br><br> <!-- Space added here -->
-        
-        <button onclick="viewBooks()">Book List</button> <!-- Book List Button -->
+        <div class="top-bar">
+            <div>
+                <h2>Library Management System</h2>
+                <div id="userRole"></div>
+            </div>
+            <div class="right-buttons">
+                <button onclick="logout()">Logout</button>
+                <button onclick="viewBooks()">Book List</button>
+            </div>
+        </div>
 
         <h3>Add / Update Book</h3>
         <input type="text" id="bookName" placeholder="Book Name" required>
@@ -32,13 +35,14 @@
 
         <h3>Search Books</h3>
         <input type="text" id="search" placeholder="Search by name or author" onkeyup="searchBooks()">
-        
+
         <h3>Book List</h3>
         <ul id="bookList"></ul>
         
         <div id="adminFeatures" style="display: none;">
             <h4>Admin Features:</h4>
-            <!-- Additional admin features can be added here -->
+            <button onclick="viewUsers()">View All Users</button>
+            <button onclick="deleteBook()">Delete Book</button>
         </div>
     </div>
 
@@ -46,6 +50,16 @@
         <h2>All Books</h2>
         <button onclick="goBack()">Back</button>
         <div id="bookGallery"></div>
+    </div>
+
+    <div id="bookDetails" style="display: none;">
+        <div id="bookInfo"></div>
+        <div id="reviewsList"></div>
+        <input type="text" id="review" placeholder="Add a review">
+        <button onclick="addReview()">Submit Review</button>
+        <button onclick="addToList()">Add to List</button>
+        <button onclick="purchaseBook()">Purchase</button>
+        <button onclick="goBack()">Back</button>
     </div>
 
     <script src="script.js"></script>
