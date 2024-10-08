@@ -1,134 +1,157 @@
-// Sample user data
-const users = [
-    { username: "admin", password: "adminpass", role: "admin" },
-    { username: "user", password: "userpass", role: "user" }
+let books = [];
+let users = [
+    { username: "admin", password: "admin123", role: "admin" },
+    { username: "user", password: "user123", role: "user" }
 ];
+let userReadingList = [];
+let reviews = {};
 
-const books = [];
-let currentIndex = -1;
-
+// Function to handle login
 function login() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    // Check if the user exists
-    const user = users.find(user => user.username === username && user.password === password);
+    const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
         document.getElementById("loginForm").style.display = "none";
         document.getElementById("bookManagement").style.display = "block";
-        document.getElementById("userRole").innerText = `Logged in as: ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`;
+        document.getElementById("userRole").innerHTML = `Logged in as: ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`;
         
         if (user.role === "admin") {
-            document.getElementById("adminFeatures").style.display = "block"; // Show admin features
-        } else {
-            document.getElementById("adminFeatures").style.display = "none"; // Hide admin features
+            document.getElementById("adminFeatures").style.display = "block";
         }
     } else {
-        document.getElementById("loginError").innerText = "Invalid username or password!";
+        document.getElementById("loginError").innerHTML = "Invalid username or password";
     }
 }
 
+// Function to add or update a book
 function addBook() {
     const bookName = document.getElementById("bookName").value;
     const bookAuthor = document.getElementById("bookAuthor").value;
     const bookImage = document.getElementById("bookImage").value;
-    
-    if (bookName === "" || bookAuthor === "" || bookImage === "") {
-        alert("Please fill out all fields.");
-        return;
-    }
 
-    if (currentIndex === -1) {
-        books.push({ name: bookName, author: bookAuthor, image: bookImage });
+    const existingBook = books.find(book => book.name === bookName);
+    if (existingBook) {
+        existingBook.author = bookAuthor;
+        existingBook.image = bookImage;
     } else {
-        books[currentIndex] = { name: bookName, author: bookAuthor, image: bookImage };
-        currentIndex = -1;
+        books.push({ name: bookName, author: bookAuthor, image: bookImage });
     }
+    displayBooks();
     
+    // Clear input fields for new entry
     document.getElementById("bookName").value = "";
     document.getElementById("bookAuthor").value = "";
     document.getElementById("bookImage").value = "";
-    displayBooks();
 }
 
+// Function to display books
 function displayBooks() {
     const bookList = document.getElementById("bookList");
     bookList.innerHTML = "";
-    
-    books.forEach((book, index) => {
+    books.forEach(book => {
         const li = document.createElement("li");
-        li.innerHTML = `${book.name} by ${book.author}
-                        <button onclick="editBook(${index})">Edit</button>
-                        <button onclick="deleteBook(${index})">Delete</button>`;
+        li.innerHTML = `${book.name} by ${book.author} <button onclick="viewBookDetails('${book.name}')">View Details</button>`;
         bookList.appendChild(li);
     });
 }
 
-function deleteBook(index) {
-    books.splice(index, 1);
+// Function to view book details
+function viewBookDetails(bookName) {
+    const book = books.find(book => book.name === bookName);
+    if (book) {
+        document.getElementById("bookManagement").style.display = "none";
+        document.getElementById("bookDetails").style.display = "block";
+        document.getElementById("bookInfo").innerHTML = `
+            <h3>${book.name}</h3>
+            <p>Author: ${book.author}</p>
+            <img src="${book.image}" alt="Book Image" style="width:150px; height:200px;">
+        `;
+        displayReviews(bookName);
+    }
+}
+
+// Function to display reviews
+function displayReviews(bookName) {
+    const reviewSection = document.getElementById("reviewsList");
+    reviewSection.innerHTML = "<h4>Reviews:</h4>";
+    if (reviews[bookName]) {
+        reviews[bookName].forEach(review => {
+            const p = document.createElement("p");
+            p.innerHTML = review;
+            reviewSection.appendChild(p);
+        });
+    }
+}
+
+// Function to add a review
+function addReview() {
+    const bookName = document.getElementById("bookInfo").querySelector("h3").innerText;
+    const reviewText = document.getElementById("review").value;
+    if (reviewText) {
+        if (!reviews[bookName]) {
+            reviews[bookName] = [];
+        }
+        reviews[bookName].push(reviewText);
+        displayReviews(bookName);
+        document.getElementById("review").value = ""; // Clear the input
+    }
+}
+
+// Function to add book to user reading list
+function addToList() {
+    const bookName = document.getElementById("bookInfo").querySelector("h3").innerText;
+    if (!userReadingList.includes(bookName)) {
+        userReadingList.push(bookName);
+        alert(`${bookName} added to your list!`);
+    } else {
+        alert(`${bookName} is already in your list!`);
+    }
+}
+
+// Function to simulate book purchase
+function purchaseBook() {
+    const bookName = document.getElementById("bookInfo").querySelector("h3").innerText;
+    alert(`You have purchased "${bookName}" successfully!`);
+}
+
+// Function to delete a book (Admin-only)
+function deleteBook() {
+    const bookName = prompt("Enter the name of the book you want to delete:");
+    books = books.filter(book => book.name !== bookName);
     displayBooks();
 }
 
-function editBook(index) {
-    currentIndex = index;
-    document.getElementById("bookName").value = books[index].name;
-    document.getElementById("bookAuthor").value = books[index].author;
-    document.getElementById("bookImage").value = books[index].image;
+// Function to view all registered users (Admin-only)
+function viewUsers() {
+    alert(`Registered users:\n${users.map(user => `${user.username} (${user.role})`).join('\n')}`);
 }
 
-function searchBooks() {
-    const searchValue = document.getElementById("search").value.toLowerCase();
-    const filteredBooks = books.filter(book => book.name.toLowerCase().includes(searchValue) || book.author.toLowerCase().includes(searchValue));
-    displayFilteredBooks(filteredBooks);
-}
-
-function displayFilteredBooks(filteredBooks) {
-    const bookList = document.getElementById("bookList");
-    bookList.innerHTML = "";
-    
-    filteredBooks.forEach((book, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `${book.name} by ${book.author}
-                        <button onclick="editBook(${index})">Edit</button>
-                        <button onclick="deleteBook(${index})">Delete</button>`;
-        bookList.appendChild(li);
-    });
-}
-
-function viewBooks() {
-    document.getElementById("bookManagement").style.display = "none";
-    document.getElementById("allBooks").style.display = "block";
-    displayAllBooks();
-}
-
-function displayAllBooks() {
-    const bookGallery = document.getElementById("bookGallery");
-    bookGallery.innerHTML = "";
-    
-    books.forEach(book => {
-        const card = document.createElement("div");
-        card.className = "book-card";
-        card.innerHTML = `<img src="${book.image}" alt="${book.name}">
-                          <h4>${book.name}</h4>
-                          <p>by ${book.author}</p>`;
-        bookGallery.appendChild(card);
-    });
-}
-
-function goBack() {
-    document.getElementById("allBooks").style.display = "none";
-    document.getElementById("bookManagement").style.display = "block";
-}
-
+// Function to log out
 function logout() {
-    document.getElementById("loginForm").style.display = "block";
     document.getElementById("bookManagement").style.display = "none";
+    document.getElementById("loginForm").style.display = "block";
     document.getElementById("username").value = "";
     document.getElementById("password").value = "";
-    document.getElementById("bookName").value = "";
-    document.getElementById("bookAuthor").value = "";
-    document.getElementById("bookImage").value = "";
-    books.length = 0;  // Clear the book list on logout
-    displayBooks();
+}
+
+// Function to search books
+function searchBooks() {
+    const searchTerm = document.getElementById("search").value.toLowerCase();
+    const filteredBooks = books.filter(book => book.name.toLowerCase().includes(searchTerm) || book.author.toLowerCase().includes(searchTerm));
+    const bookList = document.getElementById("bookList");
+    bookList.innerHTML = "";
+    filteredBooks.forEach(book => {
+        const li = document.createElement("li");
+        li.innerHTML = `${book.name} by ${book.author} <button onclick="viewBookDetails('${book.name}')">View Details</button>`;
+        bookList.appendChild(li);
+    });
+}
+
+// Function to go back to the book management page
+function goBack() {
+    document.getElementById("bookDetails").style.display = "none";
+    document.getElementById("bookManagement").style.display = "block";
 }
